@@ -34,10 +34,14 @@ class SSHProtocol(BaseProtocol):
             timeout=command.timeout,
         )
         
+        stdout = result.stdout if isinstance(result.stdout, str) else ""
+        stderr = result.stderr if isinstance(result.stderr, str) else ""
+        exit_code = result.exit_status if result.exit_status is not None else 0
+
         return Result(
-            stdout=result.stdout,
-            stderr=result.stderr,
-            exit_code=result.exit_status,
+            stdout=stdout,
+            stderr=stderr,
+            exit_code=exit_code,
             duration=0.0,
             command=command.text,
         )
