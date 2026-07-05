@@ -1,6 +1,6 @@
 import asyncssh
 
-from core.exceptions import ServerConnectionError
+from core.exceptions import CommandError, ServerConnectionError
 from core.models import Command, Result, Server
 from plugins.protocols.base import BaseProtocol
 
@@ -14,23 +14,35 @@ class SSHProtocol(BaseProtocol):
             "host": server.host,
             "port": server.port,
             "username": server.user,
+            "known_hosts": None,
         }
         if server.key_path:
             connect_kwargs["client_keys"] = [server.key_path]
         if server.password:
             connect_kwargs["password"] = server.password
 
-        self._conn = await asyncssh.connect(**connect_kwargs)
+        try:
+            self._conn = await asyncssh.connect(**connect_kwargs)
+        except (asyncssh.Error, OSError) as e:
+            raise ServerConnectionError(f"Connection failed: {e}") from e
 
     async def execute(self, command: Command) -> Result:
         if not self._conn:
             raise ServerConnectionError("Not connected to server")
 
-        result = await self._conn.run(
-            command.text,
-            cwd=command.workdir,
-            timeout=command.timeout,
-        )
+        cmd = command.text
+        if command.workdir:
+            cmd = f"cd {command.workdir} && {cmd}"
+
+        try:
+            result = await self._conn.run(
+                cmd,
+                timeout=command.timeout,
+            )
+        except asyncssh.TimeoutError as e:
+            raise CommandError(f"Command timed out after {command.timeout}s") from e
+        except asyncssh.Error as e:
+            raise CommandError(f"Command execution failed: {e}") from e
 
         stdout = result.stdout if isinstance(result.stdout, str) else ""
         stderr = result.stderr if isinstance(result.stderr, str) else ""

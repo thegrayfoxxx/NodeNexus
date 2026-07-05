@@ -1,4 +1,4 @@
-from dishka import make_container, Provider, Scope, provide
+from dishka import Provider, Scope, make_container, provide
 
 from core.models import ProtocolType
 from core.registry import PluginRegistry

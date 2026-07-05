@@ -9,12 +9,6 @@ dependencies = [
     "dishka>=1.10.1",
 ]
 
-[project.optional-dependencies]
-dev = [
-    "pytest>=8.3.0",
-    "pytest-asyncio>=0.24.0",
-]
-
 [project.scripts]
 nodenexus = "main:main"
 
@@ -22,8 +16,16 @@ nodenexus = "main:main"
 asyncio_mode = "auto"
 pythonpath = ["."]
 
+[tool.ruff]
+line-length = 99
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
 [dependency-groups]
 dev = [
-    "mypy>=1.13.0",
-    "ruff>=0.8.0",
+    "mypy>=2.1.0",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "ruff>=0.15.20",
 ]

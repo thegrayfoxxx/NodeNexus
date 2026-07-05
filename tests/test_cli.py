@@ -1,5 +1,6 @@
-import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
+
+import pytest
 
 from core.models import Result
 from plugins.interfaces.cli import parse_args, run

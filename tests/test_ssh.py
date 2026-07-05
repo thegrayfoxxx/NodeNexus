@@ -1,5 +1,6 @@
-import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
+
+import pytest
 
 from core.exceptions import ServerConnectionError
 from core.models import Command, Server
@@ -8,9 +9,7 @@ from plugins.protocols.ssh import SSHProtocol
 
 @pytest.fixture
 def mock_ssh_connection():
-    with patch(
-        "plugins.protocols.ssh.asyncssh.connect", new_callable=AsyncMock
-    ) as mock_connect:
+    with patch("plugins.protocols.ssh.asyncssh.connect", new_callable=AsyncMock) as mock_connect:
         mock_conn = AsyncMock()
         mock_connect.return_value = mock_conn
         yield mock_conn, mock_connect
@@ -35,6 +34,7 @@ async def test_ssh_connect(mock_ssh_connection):
         host="example.com",
         port=22,
         username="admin",
+        known_hosts=None,
     )
     assert protocol._conn == mock_conn
 
@@ -51,6 +51,7 @@ async def test_ssh_connect_with_key(mock_ssh_connection):
         host="example.com",
         port=22,
         username="root",
+        known_hosts=None,
         client_keys=["/path/to/key"],
     )
 
@@ -72,7 +73,26 @@ async def test_ssh_execute(mock_ssh_connection):
 
     assert result.stdout == "file.txt"
     assert result.exit_code == 0
-    mock_conn.run.assert_called_once_with("ls", cwd=None, timeout=30)
+    mock_conn.run.assert_called_once_with("ls", timeout=30)
+
+
+@pytest.mark.asyncio
+async def test_ssh_execute_with_workdir(mock_ssh_connection):
+    mock_conn, mock_connect = mock_ssh_connection
+    mock_result = MagicMock()
+    mock_result.stdout = "file.txt"
+    mock_result.stderr = ""
+    mock_result.exit_status = 0
+    mock_conn.run.return_value = mock_result
+
+    protocol = SSHProtocol()
+    protocol._conn = mock_conn
+
+    command = Command(text="ls", workdir="/tmp")
+    result = await protocol.execute(command)
+
+    assert result.stdout == "file.txt"
+    mock_conn.run.assert_called_once_with("cd /tmp && ls", timeout=30)
 
 
 @pytest.mark.asyncio
