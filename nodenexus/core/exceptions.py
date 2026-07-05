@@ -2,7 +2,7 @@ class NodeNexusError(Exception):
     """Base exception for NodeNexus."""
     pass
 
-class ConnectionError(NodeNexusError):
+class ServerConnectionError(NodeNexusError):
     """Connection to server failed."""
     pass
 

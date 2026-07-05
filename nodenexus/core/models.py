@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Optional
 
 class ProtocolType(Enum):
     """Supported protocol types."""
@@ -12,14 +11,14 @@ class Server:
     host: str
     port: int = 22
     user: str = "root"
-    key_path: Optional[str] = None
-    password: Optional[str] = None
+    key_path: str | None = None
+    password: str | None = None
 
 @dataclass(frozen=True)
 class Command:
     """Command to execute on server."""
     text: str
-    workdir: Optional[str] = None
+    workdir: str | None = None
     timeout: int = 30
     env: dict[str, str] | None = None
 

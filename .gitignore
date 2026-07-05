@@ -1,7 +1,8 @@
 .agents
 .mimocode
 AGENTS.md
-docs
+docs/*
+!docs/compose/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
