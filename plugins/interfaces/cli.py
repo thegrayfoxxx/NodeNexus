@@ -1,13 +1,13 @@
 import argparse
 import json
 import sys
-from nodenexus.core.models import Server, Command, ProtocolType
-from nodenexus.core.container import create_container
-from nodenexus.core.registry import PluginRegistry
+
+from core.container import create_container
+from core.models import Command, ProtocolType, Server
+from core.registry import PluginRegistry
 
 
 def parse_args() -> argparse.Namespace:
-    """Parse command line arguments."""
     parser = argparse.ArgumentParser(
         description="NodeNexus - Remote Server Management",
         prog="nodenexus",
@@ -23,7 +23,6 @@ def parse_args() -> argparse.Namespace:
 
 
 async def run():
-    """Execute command on remote server."""
     args = parse_args()
     container = create_container()
     registry = container.get(PluginRegistry)
@@ -43,13 +42,18 @@ async def run():
         result = await protocol.execute(command)
 
     if args.json:
-        print(json.dumps({
-            "stdout": result.stdout,
-            "stderr": result.stderr,
-            "exit_code": result.exit_code,
-            "duration": result.duration,
-            "command": result.command,
-        }, indent=2))
+        print(
+            json.dumps(
+                {
+                    "stdout": result.stdout,
+                    "stderr": result.stderr,
+                    "exit_code": result.exit_code,
+                    "duration": result.duration,
+                    "command": result.command,
+                },
+                indent=2,
+            )
+        )
     else:
         if result.stdout:
             print(result.stdout, end="")

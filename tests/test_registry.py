@@ -1,7 +1,8 @@
 import pytest
-from nodenexus.core.registry import PluginRegistry
-from nodenexus.core.models import ProtocolType
-from nodenexus.core.exceptions import PluginNotFoundError
+
+from core.exceptions import PluginNotFoundError
+from core.models import ProtocolType
+from core.registry import PluginRegistry
 
 
 def test_registry_creation():

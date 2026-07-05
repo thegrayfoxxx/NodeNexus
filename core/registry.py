@@ -1,8 +1,7 @@
-from typing import Type, TypeVar
-from nodenexus.core.models import ProtocolType
-from nodenexus.core.exceptions import PluginNotFoundError
+from typing import Type
 
-T = TypeVar("T")
+from core.exceptions import PluginNotFoundError
+from core.models import ProtocolType
 
 
 class PluginRegistry:

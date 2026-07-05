@@ -1,5 +1,10 @@
+import asyncio
+
+from plugins.interfaces.cli import run
+
+
 def main():
-    print("Hello from nodenexus!")
+    asyncio.run(run())
 
 
 if __name__ == "__main__":

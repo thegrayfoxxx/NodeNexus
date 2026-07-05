@@ -1,7 +1,9 @@
 from dishka import make_container, Provider, Scope, provide
-from nodenexus.core.registry import PluginRegistry
-from nodenexus.core.models import ProtocolType
-from nodenexus.plugins.protocols.ssh import SSHProtocol
+
+from core.models import ProtocolType
+from core.registry import PluginRegistry
+from plugins.protocols.ssh import SSHProtocol
+
 
 class AppProvider(Provider):
     scope = Scope.APP
@@ -11,6 +13,7 @@ class AppProvider(Provider):
         registry = PluginRegistry()
         registry.register_protocol(ProtocolType.SSH, SSHProtocol)
         return registry
+
 
 def create_container():
     return make_container(AppProvider())
