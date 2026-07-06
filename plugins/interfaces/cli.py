@@ -16,22 +16,22 @@ from plugins.protocols.multi import execute_on_servers
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="NodeNexus - Remote Server Management",
+        description="NodeNexus — Управление удалёнными серверами",
         prog="nodenexus",
     )
-    parser.add_argument("command", nargs="?", help="Command to execute")
+    parser.add_argument("command", nargs="?", help="Команда для выполнения")
 
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("-H", "--host", help="Server host (single)")
-    group.add_argument("--hosts", help="Comma-separated list of hosts (multi-server)")
+    group.add_argument("-H", "--host", help="Хост сервера (один)")
+    group.add_argument("--hosts", help="Список хостов через запятую (несколько серверов)")
 
-    parser.add_argument("-p", "--port", type=int, default=22, help="SSH port")
-    parser.add_argument("-u", "--user", default="root", help="SSH user")
-    parser.add_argument("-k", "--key", help="Path to SSH key")
-    parser.add_argument("--password", help="SSH password")
-    parser.add_argument("-w", "--workdir", help="Working directory on server")
-    parser.add_argument("--json", action="store_true", help="JSON output")
-    parser.add_argument("--timeout", type=int, default=30, help="Command timeout")
+    parser.add_argument("-p", "--port", type=int, default=22, help="SSH порт")
+    parser.add_argument("-u", "--user", default="root", help="SSH пользователь")
+    parser.add_argument("-k", "--key", help="Путь к SSH ключу")
+    parser.add_argument("--password", help="SSH пароль")
+    parser.add_argument("-w", "--workdir", help="Рабочая директория на сервере")
+    parser.add_argument("--json", action="store_true", help="Вывод в формате JSON")
+    parser.add_argument("--timeout", type=int, default=30, help="Таймаут команды (сек)")
     return parser.parse_args()
 
 
@@ -66,7 +66,7 @@ async def run():
         from plugins.interfaces.tui.app import NodeNexusApp
 
         app = NodeNexusApp()
-        app.run()
+        await app.run_async()
         return
 
     try:
@@ -117,8 +117,8 @@ async def run():
             sys.exit(get_worst_exit_code(results))
 
     except NodeNexusError as e:
-        print(f"Error: {e}", file=sys.stderr)
+        print(f"Ошибка: {e}", file=sys.stderr)
         sys.exit(1)
     except Exception as e:
-        print(f"Unexpected error: {e}", file=sys.stderr)
+        print(f"Непредвиденная ошибка: {e}", file=sys.stderr)
         sys.exit(1)

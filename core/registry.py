@@ -14,7 +14,7 @@ class PluginRegistry:
 
     def get_protocol(self, protocol_type: ProtocolType) -> Type:
         if protocol_type not in self._protocols:
-            raise PluginNotFoundError(f"Protocol {protocol_type} not registered")
+            raise PluginNotFoundError(f"Протокол {protocol_type} не зарегистрирован")
         return self._protocols[protocol_type]
 
     def register_interface(self, name: str, cls: Type) -> None:
@@ -22,5 +22,5 @@ class PluginRegistry:
 
     def get_interface(self, name: str) -> Type:
         if name not in self._interfaces:
-            raise PluginNotFoundError(f"Interface {name} not registered")
+            raise PluginNotFoundError(f"Интерфейс {name} не зарегистрирован")
         return self._interfaces[name]

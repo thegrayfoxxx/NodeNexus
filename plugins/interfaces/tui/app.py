@@ -14,7 +14,7 @@ from plugins.interfaces.tui.screens import (
 
 class NodeNexusApp(App):
     TITLE = "NodeNexus"
-    SUB_TITLE = "Remote Server Management"
+    SUB_TITLE = "Управление удалёнными серверами"
     db: Database
 
     CSS = """
@@ -40,14 +40,14 @@ class NodeNexusApp(App):
         yield Header()
         with Container(id="app-container"):
             with Vertical(id="sidebar"):
-                yield Button("🏠 Main Menu", id="btn-main", classes="nav-button")
-                yield Button("🖥️ Servers", id="btn-servers", classes="nav-button")
-                yield Button("📋 Templates", id="btn-templates", classes="nav-button")
-                yield Button("▶️ Run Command", id="btn-run", classes="nav-button")
-                yield Button("📜 History", id="btn-history", classes="nav-button")
-                yield Button("❌ Exit", id="btn-exit", classes="nav-button")
+                yield Button("🏠 Главное меню", id="btn-main", classes="nav-button")
+                yield Button("🖥️ Серверы", id="btn-servers", classes="nav-button")
+                yield Button("📋 Шаблоны", id="btn-templates", classes="nav-button")
+                yield Button("▶️ Выполнить команду", id="btn-run", classes="nav-button")
+                yield Button("📜 История", id="btn-history", classes="nav-button")
+                yield Button("❌ Выход", id="btn-exit", classes="nav-button")
             with Vertical(id="content"):
-                yield Static("Welcome to NodeNexus!", id="content-area")
+                yield Static("Добро пожаловать в NodeNexus!", id="content-area")
         yield Footer()
 
     async def on_mount(self):

@@ -11,28 +11,28 @@ if TYPE_CHECKING:
 class MainMenuScreen(Screen):
     def compose(self):
         yield Vertical(
-            Static("=== NodeNexus Interactive Mode ===", classes="title"),
-            Static("Select an option from the sidebar to get started."),
+            Static("=== NodeNexus — Интерактивный режим ===", classes="title"),
+            Static("Выберите опцию в боковом меню для начала работы."),
             Static(""),
-            Static("Quick Actions:"),
-            Static("  • Add a server to get started"),
-            Static("  • Create a template for frequent commands"),
-            Static("  • Run commands on multiple servers"),
+            Static("Быстрые действия:"),
+            Static("  • Добавьте сервер для начала работы"),
+            Static("  • Создайте шаблон для частых команд"),
+            Static("  • Выполняйте команды на нескольких серверах"),
         )
 
 
 class ServerListScreen(Screen):
     def compose(self):
         table = DataTable()
-        table.add_columns("Name", "Host", "Port", "User")
+        table.add_columns("Имя", "Хост", "Порт", "Пользователь")
         yield Vertical(
-            Static("=== Server Management ===", classes="title"),
+            Static("=== Управление серверами ===", classes="title"),
             table,
             Horizontal(
-                Button("Add Server", id="btn-add"),
-                Button("Edit Server", id="btn-edit"),
-                Button("Delete Server", id="btn-delete"),
-                Button("Back", id="btn-back"),
+                Button("Добавить", id="btn-add"),
+                Button("Редактировать", id="btn-edit"),
+                Button("Удалить", id="btn-delete"),
+                Button("Назад", id="btn-back"),
             ),
         )
 
@@ -40,15 +40,15 @@ class ServerListScreen(Screen):
 class TemplateListScreen(Screen):
     def compose(self):
         table = DataTable()
-        table.add_columns("Name", "Command", "Description")
+        table.add_columns("Имя", "Команда", "Описание")
         yield Vertical(
-            Static("=== Template Management ===", classes="title"),
+            Static("=== Управление шаблонами ===", classes="title"),
             table,
             Horizontal(
-                Button("Add Template", id="btn-add"),
-                Button("Edit Template", id="btn-edit"),
-                Button("Delete Template", id="btn-delete"),
-                Button("Back", id="btn-back"),
+                Button("Добавить", id="btn-add"),
+                Button("Редактировать", id="btn-edit"),
+                Button("Удалить", id="btn-delete"),
+                Button("Назад", id="btn-back"),
             ),
         )
 
@@ -61,15 +61,15 @@ class CommandRunnerScreen(Screen):
 
     def compose(self):
         yield Vertical(
-            Static("=== Command Runner ===", classes="title"),
-            Label("Select Server:"),
+            Static("=== Выполнение команд ===", classes="title"),
+            Label("Выберите сервер:"),
             DataTable(id="server-table"),
-            Label("Command (or select template):"),
-            Input(placeholder="Enter command...", id="cmd-input"),
+            Label("Команда (или выберите шаблон):"),
+            Input(placeholder="Введите команду...", id="cmd-input"),
             DataTable(id="template-table"),
             Horizontal(
-                Button("Run", id="btn-run"),
-                Button("Back", id="btn-back"),
+                Button("Выполнить", id="btn-run"),
+                Button("Назад", id="btn-back"),
             ),
             Static("", id="output-area"),
         )
@@ -78,14 +78,14 @@ class CommandRunnerScreen(Screen):
 class HistoryScreen(Screen):
     def compose(self):
         table = DataTable()
-        table.add_columns("Time", "Server", "Command", "Exit Code", "Duration")
+        table.add_columns("Время", "Сервер", "Команда", "Код выхода", "Длительность")
         yield Vertical(
-            Static("=== Command History ===", classes="title"),
+            Static("=== История команд ===", classes="title"),
             table,
             Horizontal(
-                Button("Refresh", id="btn-refresh"),
-                Button("Clear History", id="btn-clear"),
-                Button("Back", id="btn-back"),
+                Button("Обновить", id="btn-refresh"),
+                Button("Очистить историю", id="btn-clear"),
+                Button("Назад", id="btn-back"),
             ),
         )
 
@@ -124,28 +124,28 @@ class ServerFormScreen(Screen):
         self.server = server
 
     def compose(self):
-        title = "Edit Server" if self.server else "Add Server"
+        title = "Редактирование сервера" if self.server else "Добавление сервера"
         yield Vertical(
             Static(f"=== {title} ===", classes="title"),
-            Label("Name:"),
+            Label("Имя:"),
             Input(value=self.server.get("name", "") if self.server else "", id="name"),
-            Label("Host:"),
+            Label("Хост:"),
             Input(value=self.server.get("host", "") if self.server else "", id="host"),
-            Label("Port:"),
+            Label("Порт:"),
             Input(value=str(self.server.get("port", 22)) if self.server else "22", id="port"),
-            Label("User:"),
+            Label("Пользователь:"),
             Input(value=self.server.get("user", "root") if self.server else "root", id="user"),
-            Label("Key Path (optional):"),
+            Label("Путь к ключу (необязательно):"),
             Input(value=self.server.get("key_path", "") if self.server else "", id="key_path"),
-            Label("Password (optional):"),
+            Label("Пароль (необязательно):"),
             Input(
                 value=self.server.get("password", "") if self.server else "",
                 password=True,
                 id="password",
             ),
             Horizontal(
-                Button("Save", id="btn-save"),
-                Button("Cancel", id="btn-cancel"),
+                Button("Сохранить", id="btn-save"),
+                Button("Отмена", id="btn-cancel"),
             ),
         )
 
@@ -156,20 +156,20 @@ class TemplateFormScreen(Screen):
         self.template = template
 
     def compose(self):
-        title = "Edit Template" if self.template else "Add Template"
+        title = "Редактирование шаблона" if self.template else "Добавление шаблона"
         yield Vertical(
             Static(f"=== {title} ===", classes="title"),
-            Label("Name:"),
+            Label("Имя:"),
             Input(value=self.template.get("name", "") if self.template else "", id="name"),
-            Label("Command:"),
+            Label("Команда:"),
             Input(value=self.template.get("command", "") if self.template else "", id="command"),
-            Label("Description:"),
+            Label("Описание:"),
             Input(
                 value=self.template.get("description", "") if self.template else "",
                 id="description",
             ),
             Horizontal(
-                Button("Save", id="btn-save"),
-                Button("Cancel", id="btn-cancel"),
+                Button("Сохранить", id="btn-save"),
+                Button("Отмена", id="btn-cancel"),
             ),
         )

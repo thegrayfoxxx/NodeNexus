@@ -24,11 +24,11 @@ class SSHProtocol(BaseProtocol):
         try:
             self._conn = await asyncssh.connect(**connect_kwargs)
         except (asyncssh.Error, OSError) as e:
-            raise ServerConnectionError(f"Connection failed: {e}") from e
+            raise ServerConnectionError(f"Ошибка подключения: {e}") from e
 
     async def execute(self, command: Command) -> Result:
         if not self._conn:
-            raise ServerConnectionError("Not connected to server")
+            raise ServerConnectionError("Нет подключения к серверу")
 
         cmd = command.text
         if command.workdir:
@@ -40,9 +40,9 @@ class SSHProtocol(BaseProtocol):
                 timeout=command.timeout,
             )
         except asyncssh.TimeoutError as e:
-            raise CommandError(f"Command timed out after {command.timeout}s") from e
+            raise CommandError(f"Команда превысила таймаут {command.timeout}с") from e
         except asyncssh.Error as e:
-            raise CommandError(f"Command execution failed: {e}") from e
+            raise CommandError(f"Ошибка выполнения команды: {e}") from e
 
         stdout = result.stdout if isinstance(result.stdout, str) else ""
         stderr = result.stderr if isinstance(result.stderr, str) else ""
