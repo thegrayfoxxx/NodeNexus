@@ -49,6 +49,11 @@ class TemplateListScreen(Screen):
 
 
 class CommandRunnerScreen(Screen):
+    def __init__(self):
+        super().__init__()
+        self.selected_servers: list[dict] = []
+        self.selected_template: dict | None = None
+
     def compose(self):
         yield Vertical(
             Static("=== Command Runner ===", classes="title"),
