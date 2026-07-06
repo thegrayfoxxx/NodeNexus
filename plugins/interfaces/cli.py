@@ -19,9 +19,9 @@ def parse_args() -> argparse.Namespace:
         description="NodeNexus - Remote Server Management",
         prog="nodenexus",
     )
-    parser.add_argument("command", help="Command to execute")
+    parser.add_argument("command", nargs="?", help="Command to execute")
 
-    group = parser.add_mutually_exclusive_group(required=True)
+    group = parser.add_mutually_exclusive_group()
     group.add_argument("-H", "--host", help="Server host (single)")
     group.add_argument("--hosts", help="Comma-separated list of hosts (multi-server)")
 
@@ -61,6 +61,13 @@ def _build_servers(args: argparse.Namespace) -> list[Server]:
 
 async def run():
     args = parse_args()
+
+    if args.command is None and args.host is None and args.hosts is None:
+        from plugins.interfaces.tui.app import NodeNexusApp
+
+        app = NodeNexusApp()
+        app.run()
+        return
 
     try:
         container = create_container()
