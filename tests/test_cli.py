@@ -77,3 +77,52 @@ def test_parse_args_multiple_hosts():
         args = parse_args()
         assert args.hosts == "host1,host2,host3"
         assert args.host is None
+
+
+@pytest.mark.asyncio
+async def test_run_multi_server_json_output(capsys):
+    with patch("sys.argv", ["nodenexus", "ls", "--hosts", "host1,host2", "--json"]):
+        with patch("plugins.interfaces.cli.create_container") as mock_container:
+            mock_registry = MagicMock()
+            mock_protocol_class = MagicMock()
+            mock_protocol = AsyncMock()
+            mock_ctx = AsyncMock()
+            mock_ctx.__aenter__.return_value = mock_protocol
+            mock_protocol_class.return_value = mock_ctx
+            mock_protocol.execute.return_value = Result(
+                stdout="file.txt",
+                stderr="",
+                exit_code=0,
+                duration=0.5,
+                command="ls",
+            )
+            mock_registry.get_protocol.return_value = mock_protocol_class
+            mock_container.return_value.get.return_value = mock_registry
+
+            with patch("plugins.interfaces.cli.execute_on_servers") as mock_execute:
+                from core.models import MultiServerResult
+
+                mock_execute.return_value = [
+                    MultiServerResult(
+                        host="host1",
+                        result=Result(
+                            stdout="file.txt", stderr="", exit_code=0,
+                            duration=0.5, command="ls",
+                        ),
+                    ),
+                    MultiServerResult(
+                        host="host2",
+                        result=Result(
+                            stdout="file.txt", stderr="", exit_code=0,
+                            duration=0.5, command="ls",
+                        ),
+                    ),
+                ]
+
+                with pytest.raises(SystemExit) as exc_info:
+                    await run()
+                assert exc_info.value.code == 0
+
+                captured = capsys.readouterr()
+                assert '"host": "host1"' in captured.out
+                assert '"host": "host2"' in captured.out
