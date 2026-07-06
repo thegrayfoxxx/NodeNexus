@@ -106,3 +106,28 @@ class ServerFormScreen(Screen):
                 Button("Cancel", id="btn-cancel"),
             ),
         )
+
+
+class TemplateFormScreen(Screen):
+    def __init__(self, template: dict | None = None):
+        super().__init__()
+        self.template = template
+
+    def compose(self):
+        title = "Edit Template" if self.template else "Add Template"
+        yield Vertical(
+            Static(f"=== {title} ===", classes="title"),
+            Label("Name:"),
+            Input(value=self.template.get("name", "") if self.template else "", id="name"),
+            Label("Command:"),
+            Input(value=self.template.get("command", "") if self.template else "", id="command"),
+            Label("Description:"),
+            Input(
+                value=self.template.get("description", "") if self.template else "",
+                id="description",
+            ),
+            Horizontal(
+                Button("Save", id="btn-save"),
+                Button("Cancel", id="btn-cancel"),
+            ),
+        )
