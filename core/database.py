@@ -143,6 +143,10 @@ class Database:
         columns = [desc[0] for desc in cursor.description]
         return [dict(zip(columns, row)) for row in rows]
 
+    async def clear_history(self):
+        await self._conn.execute("DELETE FROM history")
+        await self._conn.commit()
+
     async def close(self):
         if self._conn:
             await self._conn.close()

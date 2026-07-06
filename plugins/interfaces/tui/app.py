@@ -2,6 +2,7 @@ from textual.app import App, ComposeResult
 from textual.containers import Container, Vertical
 from textual.widgets import Button, Footer, Header, Static
 
+from core.database import Database
 from plugins.interfaces.tui.screens import (
     CommandRunnerScreen,
     HistoryScreen,
@@ -14,6 +15,7 @@ from plugins.interfaces.tui.screens import (
 class NodeNexusApp(App):
     TITLE = "NodeNexus"
     SUB_TITLE = "Remote Server Management"
+    db: Database
 
     CSS = """
     Screen {
@@ -48,7 +50,9 @@ class NodeNexusApp(App):
                 yield Static("Welcome to NodeNexus!", id="content-area")
         yield Footer()
 
-    def on_mount(self):
+    async def on_mount(self):
+        self.db = Database()
+        await self.db.init()
         self.push_screen(MainMenuScreen())
 
     def on_button_pressed(self, event):

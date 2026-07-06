@@ -1,6 +1,6 @@
-from core.database import Database
-
 import pytest
+
+from core.database import Database
 
 
 @pytest.fixture

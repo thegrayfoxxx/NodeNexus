@@ -1,6 +1,11 @@
+from typing import TYPE_CHECKING, cast
+
 from textual.containers import Horizontal, Vertical
 from textual.screen import Screen
 from textual.widgets import Button, DataTable, Input, Label, Static
+
+if TYPE_CHECKING:
+    from plugins.interfaces.tui.app import NodeNexusApp
 
 
 class MainMenuScreen(Screen):
@@ -77,8 +82,40 @@ class HistoryScreen(Screen):
         yield Vertical(
             Static("=== Command History ===", classes="title"),
             table,
-            Button("Back", id="btn-back"),
+            Horizontal(
+                Button("Refresh", id="btn-refresh"),
+                Button("Clear History", id="btn-clear"),
+                Button("Back", id="btn-back"),
+            ),
         )
+
+    async def on_mount(self):
+        await self.load_history()
+
+    async def on_button_pressed(self, event):
+        if event.button.id == "btn-refresh":
+            await self.load_history()
+        elif event.button.id == "btn-clear":
+            await self.clear_history()
+
+    async def load_history(self):
+        table = self.query_one(DataTable)
+        table.clear()
+        app = cast("NodeNexusApp", self.app)
+        history = await app.db.get_history()
+        for record in history:
+            table.add_row(
+                str(record.get("executed_at", "")),
+                str(record.get("server_name", "")),
+                str(record.get("command", "")),
+                str(record.get("exit_code", "")),
+                f"{record.get('duration', 0):.2f}s",
+            )
+
+    async def clear_history(self):
+        app = cast("NodeNexusApp", self.app)
+        await app.db.clear_history()
+        await self.load_history()
 
 
 class ServerFormScreen(Screen):
