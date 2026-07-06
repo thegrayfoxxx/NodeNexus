@@ -1,4 +1,3 @@
-import pytest
 from plugins.interfaces.tui.screens import CommandRunnerScreen
 
 
