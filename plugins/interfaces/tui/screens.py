@@ -74,3 +74,35 @@ class HistoryScreen(Screen):
             table,
             Button("Back", id="btn-back"),
         )
+
+
+class ServerFormScreen(Screen):
+    def __init__(self, server: dict | None = None):
+        super().__init__()
+        self.server = server
+
+    def compose(self):
+        title = "Edit Server" if self.server else "Add Server"
+        yield Vertical(
+            Static(f"=== {title} ===", classes="title"),
+            Label("Name:"),
+            Input(value=self.server.get("name", "") if self.server else "", id="name"),
+            Label("Host:"),
+            Input(value=self.server.get("host", "") if self.server else "", id="host"),
+            Label("Port:"),
+            Input(value=str(self.server.get("port", 22)) if self.server else "22", id="port"),
+            Label("User:"),
+            Input(value=self.server.get("user", "root") if self.server else "root", id="user"),
+            Label("Key Path (optional):"),
+            Input(value=self.server.get("key_path", "") if self.server else "", id="key_path"),
+            Label("Password (optional):"),
+            Input(
+                value=self.server.get("password", "") if self.server else "",
+                password=True,
+                id="password",
+            ),
+            Horizontal(
+                Button("Save", id="btn-save"),
+                Button("Cancel", id="btn-cancel"),
+            ),
+        )
