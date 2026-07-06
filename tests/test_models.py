@@ -1,4 +1,4 @@
-from core.models import Command, ProtocolType, Result, Server
+from core.models import Command, MultiServerResult, ProtocolType, Result, Server
 
 
 def test_server_creation():
@@ -52,3 +52,28 @@ def test_result_creation():
 
 def test_protocol_type_enum():
     assert ProtocolType.SSH.value == "ssh"
+
+
+def test_multi_server_result():
+    result = MultiServerResult(
+        host="example.com",
+        result=Result(
+            stdout="output",
+            stderr="",
+            exit_code=0,
+            duration=0.5,
+            command="ls",
+        ),
+    )
+    assert result.host == "example.com"
+    assert result.result.stdout == "output"
+
+
+def test_multi_server_result_error():
+    result = MultiServerResult(
+        host="example.com",
+        error="Connection failed",
+    )
+    assert result.host == "example.com"
+    assert result.error == "Connection failed"
+    assert result.result is None

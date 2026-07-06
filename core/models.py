@@ -30,3 +30,10 @@ class Result:
     exit_code: int
     duration: float
     command: str
+
+
+@dataclass(frozen=True)
+class MultiServerResult:
+    host: str
+    result: Result | None = None
+    error: str | None = None
