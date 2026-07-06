@@ -70,3 +70,10 @@ async def test_run_json_output(capsys):
 
             captured = capsys.readouterr()
             assert '"stdout": "file.txt"' in captured.out
+
+
+def test_parse_args_multiple_hosts():
+    with patch("sys.argv", ["nodenexus", "ls", "--hosts", "host1,host2,host3"]):
+        args = parse_args()
+        assert args.hosts == "host1,host2,host3"
+        assert args.host is None

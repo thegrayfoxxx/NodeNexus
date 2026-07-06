@@ -14,7 +14,9 @@ def parse_args() -> argparse.Namespace:
         prog="nodenexus",
     )
     parser.add_argument("command", help="Command to execute")
-    parser.add_argument("-H", "--host", required=True, help="Server host")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("-H", "--host", help="Server host (single)")
+    group.add_argument("--hosts", help="Comma-separated list of hosts (multi-server)")
     parser.add_argument("-p", "--port", type=int, default=22, help="SSH port")
     parser.add_argument("-u", "--user", default="root", help="SSH user")
     parser.add_argument("-k", "--key", help="Path to SSH key")
