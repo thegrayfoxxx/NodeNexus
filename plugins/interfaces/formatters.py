@@ -16,10 +16,12 @@ def format_multi_server_text(results: list[MultiServerResult]) -> str:
     return "\n".join(lines)
 
 
-def format_multi_server_json(results: list[MultiServerResult]) -> list[dict]:
-    output = []
+def format_multi_server_json(
+    results: list[MultiServerResult],
+) -> list[dict[str, str | int | float]]:
+    output: list[dict[str, str | int | float]] = []
     for r in results:
-        entry = {"host": r.host}
+        entry: dict[str, str | int | float] = {"host": r.host}
         if r.error:
             entry["error"] = r.error
         else:

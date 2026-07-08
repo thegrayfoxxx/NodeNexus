@@ -106,15 +106,21 @@ async def test_run_multi_server_json_output(capsys):
                     MultiServerResult(
                         host="host1",
                         result=Result(
-                            stdout="file.txt", stderr="", exit_code=0,
-                            duration=0.5, command="ls",
+                            stdout="file.txt",
+                            stderr="",
+                            exit_code=0,
+                            duration=0.5,
+                            command="ls",
                         ),
                     ),
                     MultiServerResult(
                         host="host2",
                         result=Result(
-                            stdout="file.txt", stderr="", exit_code=0,
-                            duration=0.5, command="ls",
+                            stdout="file.txt",
+                            stderr="",
+                            exit_code=0,
+                            duration=0.5,
+                            command="ls",
                         ),
                     ),
                 ]

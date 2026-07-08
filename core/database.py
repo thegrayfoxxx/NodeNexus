@@ -54,9 +54,15 @@ class Database:
         """)
         await self._conn.commit()
 
-    async def add_server(self, name: str, host: str, port: int = 22,
-                         user: str = "root", key_path: str | None = None,
-                         password: str | None = None) -> int:
+    async def add_server(
+        self,
+        name: str,
+        host: str,
+        port: int = 22,
+        user: str = "root",
+        key_path: str | None = None,
+        password: str | None = None,
+    ) -> int:
         cursor = await self._conn.execute(
             "INSERT INTO servers"
             " (name, host, port, user, key_path, password)"
@@ -75,22 +81,16 @@ class Database:
     async def update_server(self, server_id: int, **kwargs):
         fields = ", ".join(f"{k} = ?" for k in kwargs)
         values = list(kwargs.values()) + [server_id]
-        await self._conn.execute(
-            f"UPDATE servers SET {fields} WHERE id = ?", values
-        )
+        await self._conn.execute(f"UPDATE servers SET {fields} WHERE id = ?", values)
         await self._conn.commit()
 
     async def delete_server(self, server_id: int):
-        await self._conn.execute(
-            "DELETE FROM servers WHERE id = ?", (server_id,)
-        )
+        await self._conn.execute("DELETE FROM servers WHERE id = ?", (server_id,))
         await self._conn.commit()
 
-    async def add_template(self, name: str, command: str,
-                           description: str | None = None) -> int:
+    async def add_template(self, name: str, command: str, description: str | None = None) -> int:
         cursor = await self._conn.execute(
-            "INSERT INTO templates (name, command, description)"
-            " VALUES (?, ?, ?)",
+            "INSERT INTO templates (name, command, description) VALUES (?, ?, ?)",
             (name, command, description),
         )
         await self._conn.commit()
@@ -105,28 +105,29 @@ class Database:
     async def update_template(self, template_id: int, **kwargs):
         fields = ", ".join(f"{k} = ?" for k in kwargs)
         values = list(kwargs.values()) + [template_id]
-        await self._conn.execute(
-            f"UPDATE templates SET {fields} WHERE id = ?", values
-        )
+        await self._conn.execute(f"UPDATE templates SET {fields} WHERE id = ?", values)
         await self._conn.commit()
 
     async def delete_template(self, template_id: int):
-        await self._conn.execute(
-            "DELETE FROM templates WHERE id = ?", (template_id,)
-        )
+        await self._conn.execute("DELETE FROM templates WHERE id = ?", (template_id,))
         await self._conn.commit()
 
-    async def add_history(self, server_id: int | None, command: str,
-                          stdout: str = "", stderr: str = "",
-                          exit_code: int = 0, duration: float = 0.0,
-                          template_id: int | None = None) -> int:
+    async def add_history(
+        self,
+        server_id: int | None,
+        command: str,
+        stdout: str = "",
+        stderr: str = "",
+        exit_code: int = 0,
+        duration: float = 0.0,
+        template_id: int | None = None,
+    ) -> int:
         cursor = await self._conn.execute(
             "INSERT INTO history"
             " (server_id, template_id, command, stdout, stderr,"
             " exit_code, duration)"
             " VALUES (?, ?, ?, ?, ?, ?, ?)",
-            (server_id, template_id, command,
-             stdout, stderr, exit_code, duration),
+            (server_id, template_id, command, stdout, stderr, exit_code, duration),
         )
         await self._conn.commit()
         return cursor.lastrowid or 0

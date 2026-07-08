@@ -11,6 +11,7 @@ from plugins.protocols.ssh import SSHProtocol
 def mock_ssh_connection():
     with patch("plugins.protocols.ssh.asyncssh.connect", new_callable=AsyncMock) as mock_connect:
         mock_conn = AsyncMock()
+        mock_conn.close = MagicMock()
         mock_connect.return_value = mock_conn
         yield mock_conn, mock_connect
 
